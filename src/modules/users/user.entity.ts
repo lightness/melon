@@ -7,9 +7,7 @@ import { EntityBase } from "../../common/base.entity";
 @Entity()
 export class User extends EntityBase {
 
-    @Column({
-        "unique": true
-    })
+    @Column({ unique: true })
     public name: string;
 
     @Column()

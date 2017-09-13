@@ -13,25 +13,21 @@ export class UserController {
     }
 
     @Get()
-    public getAll( @Res() res: Response) {
-        this.userService.getAll()
-            .then((users: User[]) => {
-                res.status(HttpStatus.OK).json(users);
-            });
+    public async getAll( @Res() res: Response) {
+        let users: User[] = await this.userService.getAll();
+        res.status(HttpStatus.OK).json(users);
     }
 
     @Get("/:id")
-    public getById( @Res() res: Response, @Param("id") id: string) {
-        this.userService.getById(+id)
-            .then((user) => res.status(HttpStatus.OK).json(user));
+    public async getById( @Res() res: Response, @Param("id") id: string) {
+        let user: User = await this.userService.getById(+id);
+        res.status(HttpStatus.OK).json(user);
     }
 
     @Post()
-    public create( @Res() res: Response, @Body() user: User) {
-        this.userService.add(user)
-            .then((createdUsers) => {
-                return res.status(HttpStatus.OK).json(createdUsers);
-            });
+    public async create( @Res() res: Response, @Body() user: User) {
+        let createdUser: User = await this.userService.add(user);
+        res.status(HttpStatus.OK).json(createdUser);
     }
 
     @Get("/:id/roles")

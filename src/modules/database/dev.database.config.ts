@@ -4,6 +4,7 @@ import { ConnectionOptions } from "typeorm";
 import { Role } from "../roles/role.entity";
 import { User } from "../users/user.entity";
 import { Category } from "../categories/category.entity";
+import { RolePermission } from "../roles/role-permission.entity";
 import { DatabaseConfig } from "./database.config";
 
 
@@ -23,7 +24,8 @@ export class DevDatabaseConfig extends DatabaseConfig {
                 // any entity file under src/modules
                 Category,
                 User,
-                Role
+                Role,
+                RolePermission
             ],
             autoSchemaSync: true,
             logger: "advanced-console",

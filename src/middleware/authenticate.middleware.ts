@@ -1,32 +1,37 @@
+import * as _ from "lodash";
 import * as passport from "passport";
 import { Response } from "express";
 import { HttpException } from "@nestjs/core";
 import { HttpStatus, Middleware, NestMiddleware, Next } from "@nestjs/common";
 import { ExtractJwt, StrategyOptions, Strategy as JwtStrategy } from "passport-jwt";
 
+import { Permission } from "../modules/auth/permission.enum";
 import { AuthService } from "../modules/auth/auth.service";
-import { InsufficientPrivilegesException } from "../exception/forbidden-exception/insufficient-privileges.exception";
+import { InsufficientPermissionsException } from "../exception/forbidden-exception/insufficient-privileges.exception";
+
 
 @Middleware()
 export class AuthenticateMiddleware implements NestMiddleware {
 
     public constructor(protected authService: AuthService) { }
 
-    public resolve(roles: string[]): (req, res, next) => void {
+    public resolve(requiredPermissions: Permission[]): (req, res, next) => void {
         return async (req, res: Response, next) => {
-
             let token = req["token"];
             let userId = token.user; // test token = { user: 1 }
 
-            let userRoles = await this.authService.getRolesByUserId(userId);
+            let userPermissions: Permission[] = await this.authService.getUserPermissions(userId);
+
             console.log("-------AuthenticateMiddleware LOG START---------");
-            console.log(userRoles);
+            console.log("requiredPermissions:", requiredPermissions);
+            console.log("userPermissions:", userPermissions);
             console.log("-------AuthenticateMiddleware LOG END-----------");
 
-            // if (userId % 2) {
-            //     let userRoles = ["user"];
-            //     throw new InsufficientPrivilegesException({ userRoles, requiredRoles: roles });
-            // }
+            let isAllowed: boolean = _.difference(requiredPermissions, userPermissions).length === 0;
+
+            if (!isAllowed) {
+                throw new InsufficientPermissionsException();
+            }
 
             next();
         };
