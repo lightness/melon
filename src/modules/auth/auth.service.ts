@@ -1,4 +1,3 @@
-import { ForbiddenException } from "../../exception/forbidden-exception/forbidden.exception";
 import * as _ from "lodash";
 import { Component } from "@nestjs/common";
 import { Repository } from "typeorm";
@@ -7,6 +6,7 @@ import { Role } from "../roles/role.entity";
 import { User } from "../users/user.entity";
 import { Permission } from "./permission.enum";
 import { DatabaseService } from "../database/database.service";
+import { ForbiddenException } from "../../exception/forbidden-exception/forbidden.exception";
 import { UserNotFoundException } from "../users/user.not-found.exception";
 
 
